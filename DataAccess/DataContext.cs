@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace DataAccess
 {
@@ -15,16 +16,38 @@ namespace DataAccess
             this.logger = logger;
         }
 
-        public void Connection()
+        public void ForwardOnlyConnectedAccess()
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Production.BillOfMaterials", connection);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Production.Product", connection);
 
                 cmd.StatementCompleted += (s, e) => logger.LogInformation($"Rows: {e.RecordCount}");
 
                 connection.Open();
-                var reader = cmd.ExecuteReader();
+
+                using(var reader = cmd.ExecuteReader())
+                {
+                    var columnSchema = reader.GetColumnSchema();
+                    var dataTable = new DataTable();
+
+                    foreach (var col in columnSchema)
+                    {
+                        dataTable.Columns.Add(col.ColumnName, col.DataType!);
+                    }
+
+                    while (reader.Read())
+                    {
+                        var dataRow = dataTable.NewRow();
+                        
+                        foreach (var col in columnSchema)
+                        {
+                            dataRow[col.ColumnName] = reader[col.ColumnName];
+                        }
+
+                        dataTable.Rows.Add(dataRow);
+                    }
+                }
             }
         }
     }

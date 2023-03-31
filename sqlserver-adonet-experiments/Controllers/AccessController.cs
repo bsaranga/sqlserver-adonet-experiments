@@ -18,7 +18,7 @@ namespace sqlserver_adonet_experiments.Controllers
         [HttpGet]
         public IActionResult Test()
         {
-            dataContext.Connection();
+            dataContext.ForwardOnlyConnectedAccess();
 
             return Ok(new
             {
