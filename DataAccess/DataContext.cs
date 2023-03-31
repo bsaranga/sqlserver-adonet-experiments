@@ -50,5 +50,24 @@ namespace DataAccess
                 }
             }
         }
+
+        public void DisconnectedAccess()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                var entity = "Product";
+                var dataAdapter = new SqlDataAdapter($"SELECT * FROM Production.{entity}", connection);
+                var dataSet = new DataSet();
+                dataAdapter.Fill(dataSet, entity);
+                
+                var table = dataSet.Tables[entity];
+                var rows = table.Rows;
+                
+                foreach (DataRow row in rows)
+                {
+                    
+                }
+            }
+        }
     }
 }

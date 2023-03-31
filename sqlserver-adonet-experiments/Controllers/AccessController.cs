@@ -19,6 +19,7 @@ namespace sqlserver_adonet_experiments.Controllers
         public IActionResult Test()
         {
             dataContext.ForwardOnlyConnectedAccess();
+            dataContext.DisconnectedAccess();
 
             return Ok(new
             {
