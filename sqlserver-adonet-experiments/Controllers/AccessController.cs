@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DataAccess;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace sqlserver_adonet_experiments.Controllers
@@ -7,9 +8,18 @@ namespace sqlserver_adonet_experiments.Controllers
     [ApiController]
     public class AccessController : ControllerBase
     {
+        private readonly DataContext dataContext;
+
+        public AccessController(DataContext dataContext)
+        {
+            this.dataContext = dataContext;
+        }
+
         [HttpGet]
         public IActionResult Test()
         {
+            dataContext.Connection();
+
             return Ok(new
             {
                 Result = "Okay"

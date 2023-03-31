@@ -1,3 +1,5 @@
+using DataAccess;
+
 namespace sqlserver_adonet_experiments
 {
     public static class Program
@@ -7,6 +9,7 @@ namespace sqlserver_adonet_experiments
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<DataContext>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
